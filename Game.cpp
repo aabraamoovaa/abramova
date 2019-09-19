@@ -50,19 +50,26 @@ void moveRectangle(float *y3, float *vy3)
 
 void controllBall1(float *x1, float *y1, float *vx1, float *vy1)
 {
-    if  (GetAsyncKeyState('K'))
+    if  (GetAsyncKeyState('J'))
             *vx1 = *vx1 - 1;
     if  (GetAsyncKeyState('L'))
             *vx1 = *vx1 + 1;
+    if  (GetAsyncKeyState('K'))
+            *vy1 = *vy1 - 1;
+    if  (GetAsyncKeyState('O'))
+            *vy1 = *vy1 + 1;
 }
 
 void controllBall2(float *x2, float *y2, float *vx2, float *vy2)
 {
-    if  (GetAsyncKeyState('G'))
-            *vx2 = *vx2 - 1;
     if  (GetAsyncKeyState('F'))
+            *vx2 = *vx2 - 1;
+    if  (GetAsyncKeyState('H'))
             *vx2 = *vx2 + 1;
-
+    if  (GetAsyncKeyState('G'))
+            *vy2 = *vy2 - 1;
+    if  (GetAsyncKeyState('T'))
+            *vy2 = *vy2 + 1;
 }
 
 void controllRectangle3(float *y3, float *vy3, float dt)
@@ -132,10 +139,10 @@ int main()
     float x4 = 750;
     float y4 = 100;
 
-    float vx1 = 5;
-    float vy1 = 5;
-    float vx2 = 5;
-    float vy2 = 5;
+    float vx1 = 4;
+    float vy1 = 4;
+    float vx2 = 4;
+    float vy2 = 4;
     float vy3 = 15;
     float vy4 = 15;
 
@@ -145,7 +152,6 @@ int main()
     float y01 = 200;
     float x02 = 400;
     float y02 = 450;
-
     for(;;)
     {
         txClear();
