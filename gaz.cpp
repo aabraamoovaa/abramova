@@ -1,6 +1,5 @@
 #include "TXLib.h"
 #include <ctime>
-#include "Windows.h"
 const float dt = 0.1;
 
 const int vmax = 10;
