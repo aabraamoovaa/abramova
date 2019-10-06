@@ -34,9 +34,9 @@ void moveBall(Ball* ball)
 {
     (*ball).x += (*ball).vx * dt;
     (*ball).y += (*ball).vy * dt;
-    if ((*ball).y > 570 || (*ball).y < 30)
+    if ((*ball).y > 590 || (*ball).y < 10)
         (*ball).vy = -(*ball).vy;
-    if ((*ball).x < 30 || (*ball).x > 770)
+    if ((*ball).x < 10 || (*ball).x > 790)
         (*ball).vx = -(*ball).vx;
 }
 
