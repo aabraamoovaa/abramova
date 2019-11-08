@@ -19,7 +19,7 @@ struct Ball
 
 void drawBall(Ball ball, sf::RenderWindow* window)
 {
-    sf::CircleShape shape( 00, 200);
+    sf::CircleShape shape(ball.r);
     for (int i = ball.r; i > 1; i = i - 1)
     {
         shape.setRadius(i);
