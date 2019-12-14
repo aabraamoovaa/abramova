@@ -5,6 +5,7 @@
 const int weight = 500;
 const int height = 700;
 int number_of_points = 0;
+int a = 0;
 
 struct Plat
 { 
@@ -36,7 +37,7 @@ void Platform(Plat* plat,  sf::RenderWindow* window)
             if (plat[i].y > height) 
                 {
                     plat[i].y = 0; 
-                    plat[i].x = rand() % weight;
+                    plat[i].x = rand() % (weight - weightPlarform);
                 }
         }
 
@@ -69,7 +70,7 @@ void Monster(Plat* plat, sf::RenderWindow* window)
 
     if (plat -> y > 700)  
     {
-        window -> draw(spriteGameOver);
+        window -> draw(spriteGameOver);    
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) 
@@ -93,16 +94,22 @@ int main()
     sf::Sprite spriteBack(background), spriteMenu(menu), spritePlay(play), spriteRecords(records);
     spritePlay.setPosition(sf::Vector2f(150, 200));
     spriteRecords.setPosition(sf::Vector2f(150, 320));
-    int a = 0;
+
     int rec = 0;
 
-    Plat* plat = new Plat[20];
+    int weightPlarform = 80;
+    int heightPlatform = 15;
+    Plat* plat = new Plat[10];
     for (int i = 0; i < 10; i++) 
     { 
-        plat[i].x = rand() % weight; 
-        plat[i].y = rand() % height; 
+        plat[i].x = rand() % (weight - weightPlarform); 
+        plat[i].y = rand() % (height - heightPlatform); 
+        for(int j = 0; j < 10; j++)
+        {
+            abs(plat[j].x - plat[i].x) < weightPlarform;
+            abs(plat[j].y - plat[i].y) < heightPlatform;
+        } 
     } 
-
 
     sf :: Font font;
     font.loadFromFile("calibri.ttf");
@@ -110,6 +117,7 @@ int main()
     text.setFont(font); 
     text.setCharacterSize(30);
     text.setFillColor(sf::Color(255, 255, 255));
+    text.setPosition(weight/2 - 20, height/2 - 20);
 
     while (window.isOpen())
     {
@@ -129,13 +137,14 @@ int main()
             a = a + 1;
         }
 
-        if (a > 0)          
+    if (a > 0)          
         {
             window.clear();
             window.draw(spriteBack);
             Platform(plat, &window);
             Monster(plat, &window);
         }
+    
 
         if ((sf::Mouse::isButtonPressed(sf::Mouse::Left)) && (sf::IntRect(150, 320, 200, 100).contains(sf::Mouse::getPosition(window))))
         {
