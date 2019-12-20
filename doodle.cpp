@@ -4,61 +4,86 @@
     
 const int weight = 500;
 const int height = 700;
-int number_of_points = 0;
-int a = 0;
 
 struct Plat
 { 
     int x = 0;
     int y = 0;
     float dy = 0;
-};
-
-void Platform(Plat* plat,  sf::RenderWindow* window) 
-{ 
     int weightPlarform = 80;
     int heightPlatform = 15;
+    int number_of_points = 0;
+};
 
-    sf::RectangleShape platform(sf::Vector2f(weightPlarform, heightPlatform)); 
+void drawPlatform(Plat* plat, int array, sf::RenderWindow* window) 
+{ 
+    sf::RectangleShape platform(sf::Vector2f(plat -> weightPlarform, plat -> heightPlatform)); 
     platform.setFillColor(sf::Color(150, 50, 250)); 
-    for (int i = 0; i < 10 ;i++)
+    for (int i = 0; i < array ;i++)
     {
         platform.setPosition(plat[i].x, plat[i].y); 
         window->draw(platform); 
     }
+}
 
+void JumpOnPlatform(Plat* plat, int array, sf::RenderWindow* window) 
+{
+    for (int i = 0; i < array; i++)
+    { 
+        if(((plat -> x + 50) > plat[i].x) && ((plat -> x + 30) < (plat[i].x + plat -> weightPlarform)) && (plat -> y + 75 > plat[i].y) && (plat -> y + 75 < plat[i].y + plat -> heightPlatform) && (plat -> dy > 0))               
+        {
+            plat -> dy = -10;
+            plat -> number_of_points += 1;
+        }    
+    }
+} 
+
+void PlatformPosition(Plat* plat, int array, sf::RenderWindow* window) 
+{
+    for (int i = 0; i < array; i++) 
+    { 
+        plat[i].x = rand() % (weight - plat -> weightPlarform); 
+        plat[i].y = rand() % (height - plat -> heightPlatform); 
+        for(int j = 0; j < array; j++)
+        {
+            abs(plat[j].x - plat[i].x) < plat -> weightPlarform;
+            abs(plat[j].y - plat[i].y) < plat -> heightPlatform;
+        }   
+    }   
+}
+
+
+void Scroll(Plat* plat, int array, sf::RenderWindow* window)
+{
     int scroll = 200;
-
     if (plat -> y < scroll)
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < array; i++)
         {
             plat -> y = scroll;
             plat[i].y -=  plat -> dy;
             if (plat[i].y > height) 
                 {
                     plat[i].y = 0; 
-                    plat[i].x = rand() % (weight - weightPlarform);
+                    plat[i].x = rand() % (weight - plat -> weightPlarform);
                 }
         }
+}
 
-    for (int i = 0; i < 10; i++)
-    { 
-        if(((plat -> x + 50) > plat[i].x) && ((plat -> x + 30) < (plat[i].x + weightPlarform)) && (plat -> y + 75 > plat[i].y) && (plat -> y + 75 < plat[i].y + heightPlatform) && (plat -> dy > 0))               
-        {
-            plat -> dy = -10;
-            number_of_points += 1;
-        }    
-    }
-} 
-
-void Monster(Plat* plat, sf::RenderWindow* window) 
-{ 
-    sf::Texture monster, gameover;
+void DrawMonster(Plat* plat, int array, sf::RenderWindow* window)
+{
+    sf::Texture monster;
     monster.loadFromFile("monster.png");
-    gameover.loadFromFile("gameover.png");
-    sf::Sprite spriteMonster(monster), spriteGameOver(gameover);
-    spriteGameOver.setPosition(sf::Vector2f(100, 250));
+    sf::Sprite spriteMonster(monster);
     spriteMonster.setPosition(plat -> x, plat -> y); 
+    window -> draw(spriteMonster);    
+}
+
+void MoveMonster(Plat* plat, int array, sf::RenderWindow* window) 
+{ 
+    sf::Texture  gameover;
+    gameover.loadFromFile("gameover.png");
+    sf::Sprite spriteGameOver(gameover);
+    spriteGameOver.setPosition(sf::Vector2f(100, 250));
 
     plat -> dy += 0.15;
     plat -> y += plat -> dy;
@@ -68,23 +93,52 @@ void Monster(Plat* plat, sf::RenderWindow* window)
     if ((plat -> x) > (weight - 80))
         plat -> x -= 3;
 
-    if (plat -> y > 700)  
+    if (plat -> number_of_points < 1)
     {
-        window -> draw(spriteGameOver);    
+        if (plat -> y > 620)  
+        {
+            plat -> dy = -10;
+        }
+    }
+    else
+    {    
+        if (plat -> y > height)  
+        {
+            window -> draw(spriteGameOver);    
+        }
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) 
         plat -> x += 3; 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) 
         plat -> x -= 3; 
-
-    window -> draw(spriteMonster); 
 } 
+
+void FromMenuToRecords(Plat* plat, sf::RenderWindow* window) 
+{
+    sf :: Font font;
+    font.loadFromFile("calibri.ttf");
+    sf::Text text; 
+    text.setFont(font); 
+    text.setCharacterSize(30);
+    text.setFillColor(sf::Color(255, 255, 255));
+    text.setPosition(weight/2 - 20, height/2 - 20);
+
+    sf::Texture background;
+    background.loadFromFile("1.jpg");
+    sf::Sprite spriteBack(background);
+
+    window -> clear();
+    window -> draw(spriteBack);
+    text.setString("NUMBERS OF POINTS");            
+    text.setString(std::to_string(plat -> number_of_points));
+    window -> draw(text);
+}
 
 int main()
 {
     srand(time(NULL));
-    sf::RenderWindow window(sf::VideoMode(weight, height), "Doodle Game!");
+    sf::RenderWindow window(sf::VideoMode(weight, height), "Good Game!");
 
     sf::Texture background, menu, play,records, gameover;
     background.loadFromFile("1.jpg");
@@ -95,29 +149,12 @@ int main()
     spritePlay.setPosition(sf::Vector2f(150, 200));
     spriteRecords.setPosition(sf::Vector2f(150, 320));
 
+    int FromMenuToPlay = 0;
     int rec = 0;
+    int array = 10;
 
-    int weightPlarform = 80;
-    int heightPlatform = 15;
-    Plat* plat = new Plat[10];
-    for (int i = 0; i < 10; i++) 
-    { 
-        plat[i].x = rand() % (weight - weightPlarform); 
-        plat[i].y = rand() % (height - heightPlatform); 
-        for(int j = 0; j < 10; j++)
-        {
-            abs(plat[j].x - plat[i].x) < weightPlarform;
-            abs(plat[j].y - plat[i].y) < heightPlatform;
-        } 
-    } 
-
-    sf :: Font font;
-    font.loadFromFile("calibri.ttf");
-    sf::Text text; 
-    text.setFont(font); 
-    text.setCharacterSize(30);
-    text.setFillColor(sf::Color(255, 255, 255));
-    text.setPosition(weight/2 - 20, height/2 - 20);
+    Plat* plat = new Plat[array];
+    PlatformPosition(plat, array, &window); 
 
     while (window.isOpen())
     {
@@ -134,17 +171,19 @@ int main()
 
         if ((sf::Mouse::isButtonPressed(sf::Mouse::Left)) && (sf::IntRect(150, 200, 200, 100).contains(sf::Mouse::getPosition(window))))
         {
-            a = a + 1;
+            FromMenuToPlay = FromMenuToPlay + 1;
         }
 
-    if (a > 0)          
+        if (FromMenuToPlay > 0)          
         {
             window.clear();
             window.draw(spriteBack);
-            Platform(plat, &window);
-            Monster(plat, &window);
+            drawPlatform(plat, array, &window);
+            Scroll(plat, array, &window);
+            JumpOnPlatform(plat, array, &window);
+            DrawMonster(plat, array, &window);
+            MoveMonster(plat, array, &window);
         }
-    
 
         if ((sf::Mouse::isButtonPressed(sf::Mouse::Left)) && (sf::IntRect(150, 320, 200, 100).contains(sf::Mouse::getPosition(window))))
         {
@@ -153,21 +192,15 @@ int main()
 
         if (rec > 0)          
         {
-            window.clear();
-            window.draw(spriteBack);
-            text.setString("NUMBERS OF POINTS");
-            text.setString(std::to_string(number_of_points));
-            window.draw(text);
-
+            FromMenuToRecords(plat, &window);
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) 
         {
             window.clear();
-            a = 0;  
+            FromMenuToPlay = 0;  
             rec = 0;      
         }
-
         window.display();
     }
     return 0;
