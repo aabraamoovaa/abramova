@@ -1,123 +1,107 @@
-#include <fstream>
-#include <iostream>
-
 class Node
 {
-public:
+    public:
 	int data; //поле данных
 	Node* next; //указатель на след элемент
-}  
+
+    Node(int data = 0, Node* next = nullptr)
+    {
+        this -> data = data;
+        this -> next = next;
+    }
+};  
 
 class List
 {
     public:
 	Node* head;	// head - где лежит первый элемент
-    int len();
-    void push_front(int data);
-    void pop_front();
-    void push_back(int data);
-    void pop_back();
-    void clear();
-    void remove();
-    void print();
-
-}
-
-int List::len() //длина списка
-{
-    int count = 0;
-    Node * current = head;
-    if (!current)
-        return count;
-    while(current)
+    int size;
+    List()
     {
-            count ++;
-            current = current -> next;
+        size = 0;
+        head = nullptr;
     }
-    return count;
-}
 
-void List::push_front(int data) // добавляет первый элемент
-{
-    Node* first = new Node;
-    first -> data = data;
-    first -> next = head;
-    head = first;
-}
+    int len() // размер(длина) списка
+    {
+        return this -> size;
+    }
 
-void List::pop_front() // удаляет первый элемент
-{
-    Node* first = head;
-    if(first)
+    void push_front(int data)
     {
-        head = head -> next;
+        Node* first = new Node(data);
+        first -> data = data;
+        first -> next = this -> head;
+        this -> head = first; 
+        this -> size++;
     }
-}
 
-void List::push_back(int val) // добавляет последний элемент
-{
-    Node* last = new Node;
-    last -> data = data;
-    last -> next = nullptr;
-    if (head)
+    void pop_front() // удаляет первый элемент
     {
-        Node* current = head;
-        while(current -> next)
-        {
-            current = current -> next;
-        }
-        current -> next = last;
+        Node* first = this -> head;
+        this -> head = this -> head -> next;
+        delete [] first;
+        this -> size --;    
     }
-    else
+
+    void push_back(int data) // добавляет последний элемент
     {
-        head = last;
-    }
-}
-    
-void List::pop_back() // удаляет последний элемент
-{
-    Node* current = head;
-    if (current){
-        if (current -> next){
-            while(current -> next -> next)
-            {
-                current = current -> next;
-            }
-        Node* last = current->next;
-        current -> next = nullptr;
-        }
+        if (this -> head == nullptr)
+            this -> head = new Node(data);
         else
         {
-            head = nullptr;
+            Node* current = this -> head;
+            while (current -> next != nullptr)
+                current = current -> next;
+            current -> next = new Node(data);
+        }
+        this -> size++;
+    }
+
+    void pop_back()
+    {
+        Node* current = this -> head;
+        for (int i = 0; i < (this -> size -2); i++)
+        {
+            current = current -> next;
+        }
+        Node* last = current -> next;
+        current -> next = last -> next;
+        delete last;
+        this -> size--;
+    }
+
+    void clear() //очищает список
+    {
+        while(this->size > 0)
+        {
+            this -> pop_front();
         }
     }
-}
 
-void List::clear() //очищает список(ну очевидно...)
-{
-    while(head){
-        this -> pop_front();
-    }
-}
-
-void List::remove(int value) //удаляет элементы с опредененным значением 
-{
-Node* current = head;
-    if (head -> value == value)
+    void print()
     {
-        this -> popFront();
-        return;
+        Node* current = this -> head;
+        while (current != NULL)              
+        {
+            std::cout << current -> data << " ";           
+            current = current -> next;                
+        }
     }
-} 
 
-void List::print()
-{
-    Node* element = head;
-    do 
+    int& operator[](int index) //list[i]
     {
-        std::cout << element -> data << " ";
-        element = element -> next;
-    } 
-    while (element != NULL);
-    std::cout << std::endl;
-}
+        if((index >= 0) && (index <= this -> len()))
+        {
+            Node* nd = this -> head;
+            int i = 0;
+            while((i != index) && (nd))
+            {
+                i++;
+                nd = nd -> next;
+            }
+            return nd -> data;
+        }
+        std::cout << "no such index" << std::endl;
+    }
+};
