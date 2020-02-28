@@ -51,11 +51,11 @@ int main()
  	
  				    vector < vector <int> > vec(n, vector <int> (m));
 	//Считаем матрицу из файла
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < n; i++)
 	{	
 		cout<<"\n";
 		{
-			for (int j = 0; j < 1000; j++)
+			for (int j = 0; j < m; j++)
 			{
 				f >> x[i][j];
 
