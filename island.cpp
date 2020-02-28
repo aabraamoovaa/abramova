@@ -64,8 +64,12 @@ int main()
 			    if ((x[i][j] == 1))
 			    {
 			    	countland++;
-                }
+               		    }
 
 	        }
 	    }
 	}
+    cout<<"\n"<<"Kol-vo land: "<<countland<<endl;
+
+    return 0;
+}
