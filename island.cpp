@@ -44,7 +44,7 @@ int main()
 			    if ((vec[i][j-1]==1)||((vec[i][j+1]==1))||(vec[i-1][j]==1)||(vec[i+1][j]==1))
 			    {
 			        countland = countland-1;
-			    };
+			    }
 			    }
 	        }
 	    }
