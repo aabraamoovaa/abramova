@@ -13,6 +13,7 @@ int main()
 		count++;
 	}
 	f.seekg(0, std::ios::beg);
+	f.clear();
 	int count_space = 0;
 	char symbol;
 	while (!f.eof())
@@ -24,27 +25,28 @@ int main()
 			break;
 	}
 	f.seekg(0, std::ios::beg);
+	f.clear();
 	int n = count / count_space;//число столбцов
 	int m = count_space;//число строк
 
 	int countland = 0; //число островов
  	std::vector < std::vector <int> > vec(n, std::vector <int> (m));
-	for (int i = 0; i < m; i++)
+	for (int i = 0; i < n; i++)
 	{	
 		std::cout<<"\n";
 		{
-			for (int j = 0; j < n; j++)
+			for (int j = 0; j < m + 1; j++)
 			{
 				f >> vec[i][j];
 			    std::cout << vec[i][j] << ' ';
+			    
 			    if ((vec[i][j] == 1))
 			    {
-			    	countland++;
-			    
-			    if ((vec[i][j-1]==1)||((vec[i][j+1]==1))||(vec[i-1][j]==1)||(vec[i+1][j]==1))
-			    {
-			        countland = countland-1;
-			    }
+			    	countland++;			    
+				    if ((vec[i][j-1]==1)||((vec[i][j+1]==1))||(vec[i-1][j]==1)||(vec[i+1][j]==1))
+				    {
+				        countland = countland-1;
+				    }
 			    }
 	        }
 	    }
